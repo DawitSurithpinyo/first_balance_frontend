@@ -1,31 +1,23 @@
-import eslintReact from "@eslint-react/eslint-plugin";
-import eslintJs from "@eslint/js";
-import { defineConfig } from "eslint/config";
-import tseslint from "typescript-eslint";
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
+  globalIgnores(['dist']),
   {
-    files: ["**/*.ts", "**/*.tsx"],
-
-    // Extend recommended rule sets from:
-    // 1. ESLint JS's recommended rules
-    // 2. TypeScript ESLint recommended rules
-    // 3. ESLint React's recommended-typescript rules
+    files: ['**/*.{ts,tsx}'],
     extends: [
-      eslintJs.configs.recommended,
+      js.configs.recommended,
       tseslint.configs.recommended,
-      eslintReact.configs["recommended-typescript"],
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
     ],
-
-    // Configure language/parsing options
     languageOptions: {
-      // Use TypeScript ESLint parser for TypeScript files
-      parser: tseslint.parser,
-      parserOptions: {
-        // Enable project service for better TypeScript integration
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+      ecmaVersion: 2020,
+      globals: globals.browser,
     },
 
     // Custom rule overrides (modify rule levels or disable rules)
@@ -38,4 +30,4 @@ export default defineConfig([
       "@eslint-react/web-api/no-leaked-timeout": "error",
     },
   },
-]);
+])
