@@ -1,0 +1,39 @@
+import * as z from 'zod';
+
+export const googleUser = z.object({
+    userID: z.string(),
+    userEmail: z.email(),
+    userName: z.string(),
+    lastLoginTime: z.date(),
+    activatedTime: z.date(),
+    signUpChoice: z.literal("GOOGLE"),
+    userPictureLink: z.url(),
+});
+
+export type GoogleUser = z.infer<typeof googleUser>;
+
+
+export const normalUser = z.object({
+    userID: z.string(),
+    userEmail: z.email(),
+    userName: z.string(),
+    lastLoginTime: z.date(),
+    createdTime: z.date().optional(),
+    activatedTime: z.date(),
+    signUpChoice: z.literal("MANUAL"),
+});
+
+export type NormalUser = z.infer<typeof normalUser>;
+
+
+// export const guestUser = z.object({
+//     userID: z.uuidv4(),
+//     userName: z.string(),
+//     signUpChoice: z.literal("GUEST"),
+// });
+
+// export type GuestUser = z.infer<typeof guestUser>;
+
+
+// helper: Check against all types, return first that match
+export const userTypes = z.union([googleUser, normalUser]);

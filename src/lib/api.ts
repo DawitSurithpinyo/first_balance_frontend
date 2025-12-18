@@ -25,11 +25,10 @@ export class ApiError extends Error {
 export async function request(
     endpoint: string,
     options: RequestInit = {}
-): Promise<ApiResponse | z.core.$ZodIssue[] | Error>{
+): Promise<ApiResponse | z.ZodError | Error>{
     const url = `${API_BASE_URL}${endpoint}`;
-    const {headers, ...otherOptions} = options;
     const reqOptions: RequestInit = {
-        ...otherOptions,
+        ...options,
         headers: {
             ...defaultHeaders,
             ...options.headers,
@@ -49,10 +48,7 @@ export async function request(
         return parsed;
     }
     catch (error) {
-        if(error instanceof z.ZodError){
-            return error.issues;
-        }
-        return error instanceof Error || error instanceof ApiError
+        return error instanceof Error || error instanceof z.ZodError || error instanceof ApiError
          ? error 
          : Error("An unknown error occured")
     }
@@ -60,14 +56,14 @@ export async function request(
 
 export const api = {
     get: (endpoint: string, options?: RequestInit): 
-        Promise<ApiResponse | z.core.$ZodIssue[] | Error> => 
+        Promise<ApiResponse | z.ZodError | Error> => 
             request(endpoint, {...options, method: 'GET'}),
     
     post: (
         endpoint: string, 
-        data?: any,
+        data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.core.$ZodIssue[] | Error> => 
+    ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -76,9 +72,9 @@ export const api = {
 
     put: (
         endpoint: string, 
-        data?: any,
+        data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.core.$ZodIssue[] | Error> => 
+    ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -87,9 +83,9 @@ export const api = {
 
     patch: (
         endpoint: string, 
-        data?: any,
+        data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.core.$ZodIssue[] | Error> => 
+    ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -98,9 +94,9 @@ export const api = {
 
     delete: (
         endpoint: string, 
-        data?: any,
+        data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.core.$ZodIssue[] | Error> => 
+    ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
