@@ -1,12 +1,18 @@
 import '@/App.css'
 import { api, ApiError } from '@/lib/api';
-import { useAuthContext, AuthProvider } from '@/stores/authContext';
+import { useAuthContext } from '@/stores/authContext';
 import * as z from 'zod';
-import { Routes, Route, Link, Navigate, Outlet, redirect } from 'react-router';
+import { Routes, Route, Navigate, Outlet, redirect } from 'react-router';
 import { userTypes, type GoogleUser, type NormalUser } from '@/features/login/types/userAuth';
 import { getCredentialsMsgObj } from '@/features/login/types/authErrToMsg';
 import { displayResponseMsg } from '@/utils/displayResponseMsg';
 import { useEffect } from 'react';
+
+import Dashboard from '@/features/dashboard/components/dashboard'
+import Entries from '@/features/entries/components/entries';
+import Login from '@/features/login/components/login';
+import NotFound from '@/features/notFound/components/notFound';
+import Setting from '@/features/setting/components/setting';
 
 
 type protectedRouteProps = {
@@ -64,15 +70,14 @@ function App() {
 
   return (
     <>
-      <AuthProvider>
-        <Routes>
-          <Route index element></Route>
-          <Route element={<ProtectedRoute credentials={credentials}/> } >
-
-          </Route>
-          <Route path="*" element={<p>There's nothing here: 404!</p>} />
-        </Routes>
-      </AuthProvider>
+      <Routes>
+        <Route index element={<Login/>} />
+        <Route element={<ProtectedRoute credentials={credentials}/> } />
+          <Route path='dashboard' element={<Dashboard/>} />
+          <Route path='entries' element={<Entries/>} />
+          <Route path='setting' element={<Setting/>} />
+        <Route path="*" element={<NotFound/>} />
+      </Routes>
     </>
   )
 }

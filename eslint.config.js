@@ -7,7 +7,7 @@ import eslintJs from "@eslint/js";
 export default defineConfig([
   globalIgnores(['dist']),
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx,d.ts}'],
     extends: [
       eslintJs.configs.recommended,
       tseslint.configs.recommended,
