@@ -1,5 +1,5 @@
 import React, { createContext, use, useState } from "react";
-import { type GoogleUser, type NormalUser } from "@/features/auth/types/userAuth";
+import { type GoogleUser, type NormalUser } from "@/features/login/types/userAuth";
 
 
 interface createAuthContextState {

@@ -4,10 +4,7 @@ export const googleUser = z.object({
     userID: z.string(),
     userEmail: z.email(),
     userName: z.string(),
-    lastLoginTime: z.date(),
-    activatedTime: z.date(),
     signUpChoice: z.literal("GOOGLE"),
-    userPictureLink: z.url(),
 });
 
 export type GoogleUser = z.infer<typeof googleUser>;
@@ -17,9 +14,6 @@ export const normalUser = z.object({
     userID: z.string(),
     userEmail: z.email(),
     userName: z.string(),
-    lastLoginTime: z.date(),
-    createdTime: z.date().optional(),
-    activatedTime: z.date(),
     signUpChoice: z.literal("MANUAL"),
 });
 

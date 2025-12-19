@@ -2,9 +2,9 @@ import '@/App.css'
 import { api, ApiError } from '@/lib/api';
 import { useAuthContext, AuthProvider } from '@/stores/authContext';
 import * as z from 'zod';
-import { Routes, Route, Link, Navigate, Outlet } from 'react-router';
-import { userTypes, type GoogleUser, type NormalUser } from '@/features/auth/types/userAuth';
-import { getCredentialsMsgObj } from '@/features/auth/types/authErrToMsg';
+import { Routes, Route, Link, Navigate, Outlet, redirect } from 'react-router';
+import { userTypes, type GoogleUser, type NormalUser } from '@/features/login/types/userAuth';
+import { getCredentialsMsgObj } from '@/features/login/types/authErrToMsg';
 import { displayResponseMsg } from '@/utils/displayResponseMsg';
 import { useEffect } from 'react';
 
@@ -50,6 +50,7 @@ function App() {
       const credentialParse = userTypes.safeParse(response.data);
       if (credentialParse.success) {
         login(credentialParse.data);
+        redirect("/dashboard");
         return;
       }
     }
