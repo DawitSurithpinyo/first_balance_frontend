@@ -31,7 +31,7 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
 function App() {
 
   const {credentials, login, setCSRFToken} = useAuthContext();
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCredentials();

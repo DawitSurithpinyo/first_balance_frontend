@@ -35,7 +35,7 @@ export async function request(
 ): Promise<ApiResponse | z.ZodError | Error>{
     const url = `${API_BASE_URL}${endpoint}`;
 
-    var csrfHeader = {};
+    let csrfHeader = {};
     const method = options.method;
     if (!method) {
         throw new Error('Method must be specified in a request');
