@@ -2,7 +2,7 @@ import '@/App.css'
 import { api, ApiError } from '@/lib/api';
 import { useAuthContext } from '@/stores/authContext';
 import * as z from 'zod';
-import { Routes, Route, Navigate, Outlet, redirect } from 'react-router';
+import { Routes, Route, Navigate, Outlet, useNavigate } from 'react-router';
 import { userTypes, type GoogleUser, type NormalUser } from '@/features/login/types/userAuth';
 import { getCredentialsMsgObj } from '@/features/login/types/authErrToMsg';
 import { displayResponseMsg } from '@/utils/displayResponseMsg';
@@ -30,7 +30,8 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
 
 function App() {
 
-  const {credentials, login} = useAuthContext();
+  const {credentials, login, setCSRFToken} = useAuthContext();
+  let navigate = useNavigate();
 
   useEffect(() => {
     getCredentials();
@@ -38,7 +39,7 @@ function App() {
 
   async function getCredentials(): Promise<void> {
     try {
-      const response = await api.get('/auth/getCredentials');
+      const response = await api.get('auth/getCredentials', {}, setCSRFToken);
       if (response instanceof z.ZodError){
         console.log(`Malformed API response. Details: \n ${response.issues}`);
         return;
@@ -48,7 +49,7 @@ function App() {
         return;
       }
       else if (response instanceof Error){
-        console.log("Unknown error occured.");
+        console.log(`Unknown error occured: ${response}`);
         return;
       }
 
@@ -56,7 +57,7 @@ function App() {
       const credentialParse = userTypes.safeParse(response.data);
       if (credentialParse.success) {
         login(credentialParse.data);
-        redirect("/dashboard");
+        navigate("/dashboard");
         return;
       }
     }

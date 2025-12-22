@@ -1,10 +1,15 @@
-import { apiResponse, type ApiResponse } from "@/types/apiResponseBase"
+import { apiResponse, type ApiResponse } from "@/types/apiResponseBase";
+import { csrfTokenObj } from "@/features/login/types/userAuth";
 import * as z from "zod";
+
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const defaultHeaders = {
     'Content-Type': 'application/json'
 };
+const defaultOptions: RequestInit = {
+    credentials: 'include'
+}
 
 export class ApiError extends Error {
     public messageCode;
@@ -24,14 +29,29 @@ export class ApiError extends Error {
 
 export async function request(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
+    csrfToken?: string,
+    setCSRFTokenFunc?: (token: string) => void
 ): Promise<ApiResponse | z.ZodError | Error>{
     const url = `${API_BASE_URL}${endpoint}`;
+
+    var csrfHeader = {};
+    const method = options.method;
+    if (!method) {
+        throw new Error('Method must be specified in a request');
+    }
+    if(!['GET', 'HEAD', 'OPTIONS'].includes(method) && csrfToken) {
+        csrfHeader = {
+            'X-CSRF-Token': csrfToken
+        };
+    }
     const reqOptions: RequestInit = {
+        ...defaultOptions,
         ...options,
         headers: {
             ...defaultHeaders,
             ...options.headers,
+            ...csrfHeader,
         }
     };
 
@@ -45,61 +65,84 @@ export async function request(
             throw new ApiError(data.message, data.messageCode, response.status);
         }
 
+        const csrfTok = response.headers.get('X-CSRF-Token');
+        if(setCSRFTokenFunc){
+            const tokenParsed = csrfTokenObj.parse(csrfTok);
+            setCSRFTokenFunc(tokenParsed);
+        }
+
         return parsed;
     }
     catch (error) {
         return error instanceof Error || error instanceof z.ZodError || error instanceof ApiError
          ? error 
-         : Error("An unknown error occured")
+         : Error(`An unknown error occured: ${error}`)
     }
 }
 
 export const api = {
-    get: (endpoint: string, options?: RequestInit): 
+    get: (endpoint: string, 
+        options?: RequestInit, 
+        setCSRFTokenFunc?: (token: string) => void): 
         Promise<ApiResponse | z.ZodError | Error> => 
-            request(endpoint, {...options, method: 'GET'}),
+            request(endpoint, {
+                ...options, 
+                method: 'GET'
+            }, undefined, setCSRFTokenFunc),
     
     post: (
-        endpoint: string, 
+        endpoint: string,
+        csrfToken: string,
+        setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
-        options?: RequestInit
+        options?: RequestInit,
     ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
-            method: 'POST'
-        }),
+            method: 'POST',
+        }, 
+        csrfToken, setCSRFTokenFunc),
 
     put: (
         endpoint: string, 
+        csrfToken: string,
+        setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
     ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
-            method: 'PUT'
-        }),
+            method: 'PUT',
+        },
+        csrfToken, setCSRFTokenFunc),
 
     patch: (
         endpoint: string, 
+        csrfToken: string,
+        setCSRFTokenFunc: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
     ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
-            method: 'PATCH'
-        }),
+            method: 'PATCH',
+        },
+        csrfToken, setCSRFTokenFunc),
 
     delete: (
         endpoint: string, 
+        csrfToken: string,
+        setCSRFTokenFunc: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
     ): Promise<ApiResponse | z.ZodError | Error> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
-            method: 'DELETE'
-        }),
+            method: 'DELETE',
+        },
+        csrfToken, setCSRFTokenFunc),
 }
