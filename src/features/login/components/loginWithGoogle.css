@@ -1,0 +1,19 @@
+#login-with-google-btn {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    align-items: center;
+    background-color: #D9D9D9;
+}
+
+#google-logo {
+    width: 50px;
+    height: 50px;
+}
+
+#google-login-text {
+    font-size: 20px;
+    padding-left: 10%;
+    margin: auto;
+}
