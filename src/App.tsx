@@ -1,12 +1,9 @@
 import '@/App.css'
-import { api, ApiError } from '@/lib/api';
 import { useAuthContext } from '@/stores/authContext';
-import * as z from 'zod';
-import { Routes, Route, Navigate, Outlet, useNavigate } from 'react-router';
-import { userTypes, type GoogleUser, type NormalUser } from '@/features/login/types/userAuth';
-import { getCredentialsMsgObj } from '@/features/login/types/authErrToMsg';
-import { displayResponseMsg } from '@/utils/displayResponseMsg';
+import { Routes, Route, Navigate, Outlet } from 'react-router';
+import { type GoogleUser, type NormalUser } from '@/features/login/types/userAuth';
 import { useEffect } from 'react';
+import getCredentials from '@/lib/getCredentials';
 
 import Dashboard from '@/features/dashboard/components/dashboard'
 import Entries from '@/features/entries/components/entries';
@@ -21,50 +18,29 @@ type protectedRouteProps = {
 };
 
 const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) => {
-  if(credentials === null || credentials === undefined) {
+  const {sessionIsChecked} = useAuthContext();
+  if (!sessionIsChecked) {
+    return <div>Loading...</div>
+  }
+
+  if(!credentials) {
     return <Navigate to={redirectPath} replace/>;
   }
+
   return <Outlet/>;
 };
 
 
 function App() {
 
-  const {credentials, login, setCSRFToken} = useAuthContext();
-  const navigate = useNavigate();
+  const {credentials, login, setCSRFToken, setSessionIsChecked} = useAuthContext();
 
   useEffect(() => {
-    getCredentials();
+    const run = async() => {
+      await getCredentials(setCSRFToken, login, setSessionIsChecked);
+    };
+    run();
   }, []);
-
-  async function getCredentials(): Promise<void> {
-    try {
-      const response = await api.get('auth/getCredentials', {}, setCSRFToken);
-      if (response instanceof z.ZodError){
-        console.log(`Malformed API response. Details: \n ${response.issues}`);
-        return;
-      }
-      else if (response instanceof ApiError) {
-        displayResponseMsg(getCredentialsMsgObj, response);
-        return;
-      }
-      else if (response instanceof Error){
-        console.log(`Unknown error occured: ${response}`);
-        return;
-      }
-
-      displayResponseMsg(getCredentialsMsgObj, response);
-      const credentialParse = userTypes.safeParse(response.data);
-      if (credentialParse.success) {
-        login(credentialParse.data);
-        navigate("/dashboard");
-        return;
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
-  }
 
   // ---------------------------------------------------------------------------
   // Can use Link for global nav bar?
@@ -73,10 +49,11 @@ function App() {
     <>
       <Routes>
         <Route index element={<Login/>} />
-        <Route element={<ProtectedRoute credentials={credentials}/> } />
+        <Route element={<ProtectedRoute credentials={credentials}/>}>
           <Route path='dashboard' element={<Dashboard/>} />
           <Route path='entries' element={<Entries/>} />
           <Route path='setting' element={<Setting/>} />
+        </Route>
         <Route path="*" element={<NotFound/>} />
       </Routes>
     </>

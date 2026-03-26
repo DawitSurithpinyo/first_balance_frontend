@@ -2,6 +2,11 @@ import { apiResponse, type ApiResponse } from "@/types/apiResponseBase";
 import { csrfTokenObj } from "@/features/login/types/userAuth";
 import * as z from "zod";
 
+export type ApiResult =
+  | { type: "success"; data: ApiResponse }
+  | { type: "api_error"; error: ApiError }
+  | { type: "validation_error"; error: z.ZodError }
+  | { type: "unknown_error"; error: Error };
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const defaultHeaders = {
@@ -32,7 +37,7 @@ export async function request(
     options: RequestInit = {},
     csrfToken?: string,
     setCSRFTokenFunc?: (token: string) => void
-): Promise<ApiResponse | z.ZodError | Error>{
+): Promise<ApiResult>{
     const url = `${API_BASE_URL}${endpoint}`;
 
     let csrfHeader = {};
@@ -71,12 +76,25 @@ export async function request(
             setCSRFTokenFunc(tokenParsed);
         }
 
-        return parsed;
+        return { type: "success", data: parsed };
     }
     catch (error) {
-        return error instanceof Error || error instanceof z.ZodError || error instanceof ApiError
-         ? error 
-         : Error(`An unknown error occured: ${error}`)
+        if (error instanceof ApiError) {
+            return { type: "api_error", error };
+        }
+
+        if (error instanceof z.ZodError) {
+            return { type: "validation_error", error };
+        }
+
+        if (error instanceof Error) {
+            return { type: "unknown_error", error };
+        }
+
+        return {
+            type: "unknown_error",
+            error: new Error(`An unknown error occurred: ${error}`)
+        };
     }
 }
 
@@ -84,7 +102,7 @@ export const api = {
     get: (endpoint: string, 
         options?: RequestInit, 
         setCSRFTokenFunc?: (token: string) => void): 
-        Promise<ApiResponse | z.ZodError | Error> => 
+        Promise<ApiResult> => 
             request(endpoint, {
                 ...options, 
                 method: 'GET'
@@ -96,7 +114,7 @@ export const api = {
         setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
         options?: RequestInit,
-    ): Promise<ApiResponse | z.ZodError | Error> => 
+    ): Promise<ApiResult> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -110,7 +128,7 @@ export const api = {
         setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.ZodError | Error> => 
+    ): Promise<ApiResult> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -124,7 +142,7 @@ export const api = {
         setCSRFTokenFunc: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.ZodError | Error> => 
+    ): Promise<ApiResult> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,
@@ -138,7 +156,7 @@ export const api = {
         setCSRFTokenFunc: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
-    ): Promise<ApiResponse | z.ZodError | Error> => 
+    ): Promise<ApiResult> => 
         request(endpoint, {
             ...options, 
             body: data ? JSON.stringify(data) : undefined,

@@ -8,6 +8,8 @@ export interface createAuthContextState {
     login: (cred: GoogleUser | NormalUser) => void
     logout: () => void
     setCSRFToken: (token: string) => void
+    sessionIsChecked: boolean
+    setSessionIsChecked: (checked: boolean) => void
 }
 
 
@@ -24,6 +26,7 @@ export function useAuthContext() {
 export function AuthProvider({children}: {children:React.ReactNode}) {
     const [credentials, setCredentials] = useState<GoogleUser | NormalUser | null>(null);
     const [csrfToken, setCsrfToken] = useState<string | null>(null);
+    const [sessionIsChecked, setIsChecked] = useState<boolean>(false);
 
     const login = (cred: GoogleUser | NormalUser) => {
         setCredentials(cred);
@@ -42,8 +45,12 @@ export function AuthProvider({children}: {children:React.ReactNode}) {
         setCsrfToken(token);
     }
 
+    const setSessionIsChecked = (checked: boolean) => {
+        setIsChecked(checked)
+    }
+
     return(
-        <AuthContext.Provider value={{credentials, csrfToken, setCSRFToken, login, logout}}>
+        <AuthContext.Provider value={{credentials, csrfToken, setCSRFToken, login, logout, sessionIsChecked, setSessionIsChecked}}>
             {children}
         </AuthContext.Provider>
     )

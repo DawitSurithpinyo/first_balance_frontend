@@ -19,16 +19,6 @@ export const normalUser = z.object({
 
 export type NormalUser = z.infer<typeof normalUser>;
 
-
-// export const guestUser = z.object({
-//     userID: z.uuidv4(),
-//     userName: z.string(),
-//     signUpChoice: z.literal("GUEST"),
-// });
-
-// export type GuestUser = z.infer<typeof guestUser>;
-
-
 // helper: Check against all types, return first that match
 export const userTypes = z.union([googleUser, normalUser]);
 
