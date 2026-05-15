@@ -31,8 +31,8 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
   return (
     <>
       {/* After auth: global navbar + everything else */}
-      <NavBar/>
       <Outlet/>
+      <NavBar/>
     </>
   );
 };
