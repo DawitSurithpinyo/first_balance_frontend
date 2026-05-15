@@ -5,11 +5,12 @@ import { type GoogleUser, type NormalUser } from '@/features/login/types/userAut
 import { useEffect } from 'react';
 import getCredentials from '@/lib/getCredentials';
 
-import Dashboard from '@/features/dashboard/components/dashboard'
+import Dashboard from '@/features/dashboard/components/dashboard';
 import Entries from '@/features/entries/components/entries';
 import Login from '@/features/login/components/login';
 import NotFound from '@/features/notFound/components/notFound';
 import Setting from '@/features/setting/components/setting';
+import NavBar from '@/components/navBar/navBar';
 
 
 type protectedRouteProps = {
@@ -27,7 +28,13 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
     return <Navigate to={redirectPath} replace/>;
   }
 
-  return <Outlet/>;
+  return (
+    <>
+      {/* After auth: global navbar + everything else */}
+      <NavBar/>
+      <Outlet/>
+    </>
+  );
 };
 
 
@@ -41,9 +48,6 @@ function App() {
     };
     run();
   }, []);
-
-  // ---------------------------------------------------------------------------
-  // Can use Link for global nav bar?
 
   return (
     <>
