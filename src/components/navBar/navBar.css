@@ -1,0 +1,10 @@
+#navBar {
+    position: fixed;
+    bottom: 0;
+    /* Make the div full width */
+    left: 0;
+    right: 0;
+    background-color: lightgray;
+    direction: flex;
+    flex-direction: column;
+}
