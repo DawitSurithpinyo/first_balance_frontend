@@ -5,6 +5,7 @@ export const googleUser = z.object({
     userEmail: z.email(),
     userName: z.string(),
     signUpChoice: z.literal("GOOGLE"),
+    userPictureLink: z.url()
 });
 
 export type GoogleUser = z.infer<typeof googleUser>;
