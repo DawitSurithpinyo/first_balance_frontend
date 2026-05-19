@@ -5,7 +5,7 @@ import { useEffect } from "react"
 import type { Transaction } from "@/types/transactions"
 
 export default function Dashboard() {
-    var t: Transaction[] = []
+    const transactions = useTransactions((state) => state.transactions)
     const addToState = (res: Transaction[]) => { 
         useTransactions((state) => state.addManyTransactions(res)) 
     }
@@ -16,13 +16,12 @@ export default function Dashboard() {
             if (res) {
                 // res == void on error cases
                 addToState(res)
-                t = res
             }
         }
         get()
-    }, [])
+    }, [transactions])
     
-    if (t.length == 0) {
+    if (transactions.length == 0) {
         return (
             <>
                 <span>
