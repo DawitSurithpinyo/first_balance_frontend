@@ -4,7 +4,7 @@ import { type Transaction } from '@/types/transactions';
 interface TransactionsState {
     transactions: Transaction[]
     addOneTransaction: (t: Transaction) => void // for adding a new transaction in entry page
-    addManyTransactions: (t: Transaction[]) => void // for loading user's transactions from API
+    loadTransactions: (t: Transaction[]) => void // for loading user's transactions from API
 }
 
 export const useTransactions = create<TransactionsState>((set) => ({
@@ -23,11 +23,10 @@ export const useTransactions = create<TransactionsState>((set) => ({
                 ...state.transactions
             ]
         })),
-    addManyTransactions: t => 
-        set(state => ({
+    loadTransactions: t => 
+        set(() => ({
             transactions: [
-                ...t,
-                ...state.transactions
+                ...t
             ]
         }))
 }))
