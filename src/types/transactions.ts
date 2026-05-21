@@ -6,7 +6,7 @@ export const transaction = z.object({
     accountID: z.string(),
     value: z.number(),
     date: z.coerce.date(),
-    memo: z.string().optional()
+    memo: z.string().optional().nullable()
 })
 
 export const transactionsArray = z.array(transaction)
