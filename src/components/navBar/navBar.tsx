@@ -1,11 +1,12 @@
 import './navBar.css'
+import { Link } from 'react-router'
 
 export default function NavBar() {
     return (
         <ul>
-            <li><a href='/dashboard'>Dashboard</a></li>
-            <li><a href='/entries'>Entries</a></li>
-            <li><a href='/setting'>Account</a></li>
+            <li><Link to="/dashboard">Dashboard</Link></li>
+            <li><Link to="/entries">Entries</Link></li>
+            <li><Link to="/setting">Setting</Link></li>
         </ul>
     )
 }
