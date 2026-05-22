@@ -3,12 +3,15 @@ import { type Transaction } from '@/types/transactions';
 
 interface TransactionsState {
     transactions: Transaction[]
+    needRefetch: boolean
     addOneTransaction: (t: Transaction) => void // for adding a new transaction in entry page
     loadTransactions: (t: Transaction[]) => void // for loading user's transactions from API
+    setNeedRefetch: (b: boolean) => void
 }
 
 export const useTransactions = create<TransactionsState>((set) => ({
     transactions: [],
+    needRefetch: true,
     addOneTransaction: t => 
         set(state => ({
             transactions: [
@@ -28,5 +31,9 @@ export const useTransactions = create<TransactionsState>((set) => ({
             transactions: [
                 ...t
             ]
+        })),
+    setNeedRefetch: b => 
+        set(() => ({
+            needRefetch: b
         }))
 }))

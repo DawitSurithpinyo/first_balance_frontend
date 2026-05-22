@@ -2,7 +2,8 @@ import { api } from "./api";
 import { transactionsArray, type Transaction } from "@/types/transactions";
 
 export default async function getTransactions(
-    setStateCallback: (t: Transaction[]) => void
+    setTransactionsCallback: (t: Transaction[]) => void,
+    setNeedRefetchCallback: (b: boolean) => void
 ): Promise<void> {
     try {
         const res = await api.get('transaction/get', {})
@@ -25,7 +26,8 @@ export default async function getTransactions(
                 console.log(`Malformed API response. Details: \n ${parsed.error}`)
                 return
             }
-            setStateCallback(parsed.data)
+            setTransactionsCallback(parsed.data)
+            setNeedRefetchCallback(false)
             return
         }
         else if (res.data.messageCode == "SUCCESS_NO_REFETCH_NEEDED") {
