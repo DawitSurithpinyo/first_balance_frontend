@@ -50,8 +50,8 @@ export function AuthProvider({children}: {children:React.ReactNode}) {
     }
 
     return(
-        <AuthContext.Provider value={{credentials, csrfToken, setCSRFToken, login, logout, sessionIsChecked, setSessionIsChecked}}>
+        <AuthContext value={{credentials, csrfToken, setCSRFToken, login, logout, sessionIsChecked, setSessionIsChecked}}>
             {children}
-        </AuthContext.Provider>
+        </AuthContext>
     )
 }
