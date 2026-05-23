@@ -19,7 +19,7 @@ export default async function googleLogin(
         )
         
         switch (result.type) {
-            case "success":
+            case "success": {
                 const u = googleUser.safeParse(result.data.data);
                 if (!u.success || u.data == undefined) {
                     console.log("Zod error, unexpected response data shape of this API endpoint:", u.error);
@@ -27,15 +27,19 @@ export default async function googleLogin(
                 }
                 onSuccessCallback(u.data);
                 return
-            case "api_error":
+            }
+            case "api_error": {
                 console.log("API error:", result.error);
                 return
-            case "validation_error":
+            }
+            case "validation_error": {
                 console.log("Zod error, unexpected base API response shape:", result.error);
                 return
-            case "unknown_error":
+            }
+            case "unknown_error": {
                 console.log("Unknown error:", result.error);
                 return
+            }
         }
     }
     catch (e) {
