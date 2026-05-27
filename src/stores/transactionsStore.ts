@@ -1,11 +1,17 @@
 import { create } from 'zustand';
 import { type Transaction } from '@/types/transactions';
+import { type TransactionsEditableFields } from '@/types/transactions';
 
 interface TransactionsState {
     transactions: Transaction[]
     needRefetch: boolean
     addOneTransaction: (t: Transaction) => void // for adding a new transaction in entry page
     loadTransactions: (t: Transaction[]) => void // for loading user's transactions from API
+    updateOneTransaction: <K extends TransactionsEditableFields>(
+        TID: string, 
+        field: K, 
+        newVal: Transaction[K]
+    ) => void
     setNeedRefetch: (b: boolean) => void
 }
 
@@ -26,6 +32,17 @@ export const useTransactions = create<TransactionsState>((set) => ({
                 ...state.transactions
             ]
         })),
+    updateOneTransaction: (TID, field, newVal) =>
+        set(state => ({
+            transactions: state.transactions.map((transaction) => 
+                transaction.transactionID === TID
+                ? {
+                    ...transaction,
+                    [field]: newVal
+                  }
+                : transaction
+            )
+        })),
     loadTransactions: t => 
         set(() => ({
             transactions: [
@@ -35,5 +52,5 @@ export const useTransactions = create<TransactionsState>((set) => ({
     setNeedRefetch: b => 
         set(() => ({
             needRefetch: b
-        }))
+        })),
 }))
