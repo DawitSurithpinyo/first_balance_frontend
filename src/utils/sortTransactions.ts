@@ -16,7 +16,7 @@ export function sortTransactionsByStringKey(
         }
 
         if (ascending) {
-            return lowerB.localeCompare(lowerB)
+            return lowerA.localeCompare(lowerB)
         }
         return lowerB.localeCompare(lowerA)   
     })
