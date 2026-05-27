@@ -86,6 +86,9 @@ export default function Table() {
                     newStateValue = normalized
                     break
                 }
+                default: {
+                    throw new Error(`Invalid input for edited field: ${editedField}`)
+                }
             }
 
             await patchTransaction(newTransaction, csrfToken ?? "")
@@ -135,9 +138,9 @@ export default function Table() {
                                 defaultValue={t.transactionName}
                                 onInput={e => handleCellChange(e)}
                                 onBlur={() => handleCellSubmit("transactionName", t.transactionID)}
-                                onKeyDown={(e) => {
+                                onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
-                                        handleCellSubmit("transactionName", t.transactionID)
+                                       await handleCellSubmit("transactionName", t.transactionID)
                                     }
                                 }}
                             />
@@ -147,9 +150,9 @@ export default function Table() {
                                 defaultValue={t.accountID}
                                 onInput={e => handleCellChange(e)}
                                 onBlur={() => handleCellSubmit("accountID", t.transactionID)}
-                                onKeyDown={(e) => {
+                                onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
-                                        handleCellSubmit("accountID", t.transactionID)
+                                        await handleCellSubmit("accountID", t.transactionID)
                                     }
                                 }}
                             />
@@ -159,9 +162,9 @@ export default function Table() {
                                 defaultValue={t.value.toString()}
                                 onInput={e => handleCellChange(e)}
                                 onBlur={() => handleCellSubmit("value", t.transactionID)}
-                                onKeyDown={(e) => {
+                                onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
-                                        handleCellSubmit("value", t.transactionID)
+                                        await handleCellSubmit("value", t.transactionID)
                                     }
                                 }}
                             />
@@ -171,9 +174,9 @@ export default function Table() {
                                 defaultValue={t.date.toLocaleDateString()}
                                 onInput={e => handleCellChange(e)}
                                 onBlur={() => handleCellSubmit("date", t.transactionID)}
-                                onKeyDown={(e) => {
+                                onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
-                                        handleCellSubmit("date", t.transactionID)
+                                        await handleCellSubmit("date", t.transactionID)
                                     }
                                 }}
                             />
@@ -183,9 +186,9 @@ export default function Table() {
                                 defaultValue={t.memo ?? ""}
                                 onInput={e => handleCellChange(e)}
                                 onBlur={() => handleCellSubmit("memo", t.transactionID)}
-                                onKeyDown={(e) => {
+                                onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
-                                        handleCellSubmit("memo", t.transactionID)
+                                        await handleCellSubmit("memo", t.transactionID)
                                     }
                                 }}
                             />
