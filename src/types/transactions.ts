@@ -12,3 +12,6 @@ export const transaction = z.object({
 export const transactionsArray = z.array(transaction)
 
 export type Transaction = z.infer<typeof transaction>
+
+export type TransactionsSortKeys = Exclude<keyof Transaction, "transactionID">
+export type TransactionsEditableFields = TransactionsSortKeys
