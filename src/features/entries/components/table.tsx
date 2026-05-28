@@ -26,7 +26,13 @@ export default function Table() {
     const sortKey = useTransactionsHandling((state) => state.sortKey)
     const sortAscending = useTransactionsHandling((state) => state.sortAscending)
 
-    const [editedValue, setEditedValue] = useState<string | number | Date | null>(null)
+    // Table cell states
+    const [originalValue, setOriginalValue] = useState<string | null>(null)
+    function handleCellFocus(e: React.FocusEvent<HTMLInputElement, Element>): void {
+        setOriginalValue(e.currentTarget.value)
+    }
+
+    const [editedValue, setEditedValue] = useState<string | null>(null)
     function handleCellChange(e: React.FormEvent<HTMLInputElement>): void {
         setEditedValue(e.currentTarget.value)
     }
@@ -36,8 +42,10 @@ export default function Table() {
         transactionID: string
     ): Promise<void> {
         try {
-            if (editedValue == null) {
-                // cell hasn't been edited
+            if (editedValue == null || (originalValue == editedValue)) {
+                // cell hasn't been edited, or the final edited value is same as original (no point updating)
+                setEditedValue(null)
+                setOriginalValue(null)
                 return
             }
 
@@ -94,6 +102,7 @@ export default function Table() {
             await patchTransaction(newTransaction, csrfToken ?? "")
             setTransactionsNeedRefetch(true)
             updateOneTransaction(transactionID, editedField, newStateValue)
+            setOriginalValue(null)
             setEditedValue(null)
         }
         catch (e) {
@@ -136,8 +145,9 @@ export default function Table() {
                         <td>
                             <input
                                 defaultValue={t.transactionName}
+                                onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
-                                onBlur={() => handleCellSubmit("transactionName", t.transactionID)}
+                                onBlur={async () => await handleCellSubmit("transactionName", t.transactionID)}
                                 onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
                                        await handleCellSubmit("transactionName", t.transactionID)
@@ -148,8 +158,9 @@ export default function Table() {
                         <td>
                             <input 
                                 defaultValue={t.accountID}
+                                onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
-                                onBlur={() => handleCellSubmit("accountID", t.transactionID)}
+                                onBlur={async () => await handleCellSubmit("accountID", t.transactionID)}
                                 onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
                                         await handleCellSubmit("accountID", t.transactionID)
@@ -160,8 +171,9 @@ export default function Table() {
                         <td>
                             <input 
                                 defaultValue={t.value.toString()}
+                                onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
-                                onBlur={() => handleCellSubmit("value", t.transactionID)}
+                                onBlur={async () => await handleCellSubmit("value", t.transactionID)}
                                 onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
                                         await handleCellSubmit("value", t.transactionID)
@@ -172,8 +184,9 @@ export default function Table() {
                         <td>
                             <input 
                                 defaultValue={t.date.toLocaleDateString()}
+                                onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
-                                onBlur={() => handleCellSubmit("date", t.transactionID)}
+                                onBlur={async () => await handleCellSubmit("date", t.transactionID)}
                                 onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
                                         await handleCellSubmit("date", t.transactionID)
@@ -184,8 +197,9 @@ export default function Table() {
                         <td>
                             <input 
                                 defaultValue={t.memo ?? ""}
+                                onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
-                                onBlur={() => handleCellSubmit("memo", t.transactionID)}
+                                onBlur={async () => await handleCellSubmit("memo", t.transactionID)}
                                 onKeyDown={async (e) => {
                                     if (e.key == "Enter") {
                                         await handleCellSubmit("memo", t.transactionID)
