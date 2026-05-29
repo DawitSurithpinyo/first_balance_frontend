@@ -1,7 +1,9 @@
 import { useTransactionsHandling } from "@/features/entries/stores/transactionsHandling"
+import { useTransactions } from "@/stores/transactionsStore"
 import type { TransactionsSortKeys } from "@/types/transactions"
 
 export default function Toolbar() {
+    const transactions = useTransactions((state) => state.transactions)
     const setSortKey = useTransactionsHandling((state) => state.setSortKey)
     const setSortAsc = useTransactionsHandling((state) => state.setSortAsc)
 
@@ -22,20 +24,22 @@ export default function Toolbar() {
     }
 
     return (
-        <>
-            <label htmlFor="sortKey">Sort by:</label>
-            <select id="sortKey" defaultValue="date" onChange={e => handleSubmitSortKey(e.target.value as TransactionsSortKeys)}>
-                <option value="transactionName">transaction name</option>
-                <option value="accountID">account ID</option>
-                <option value="value">value</option>
-                <option value="date">date</option>
-                <option value="memo">memo</option>
-            </select>
-            <label htmlFor="sortAsc">Sort ascending</label>
-            <select id="sortAsc" defaultValue="true" onChange={e => handleSubmitSortAsc(e.target.value)}>
-                <option value="true">true</option>
-                <option value="false">false</option>
-            </select>
-        </>
+        (transactions.length === 0)
+            ? <></>
+            : <>
+                <label htmlFor="sortKey">Sort by:</label>
+                <select id="sortKey" defaultValue="date" onChange={e => handleSubmitSortKey(e.target.value as TransactionsSortKeys)}>
+                    <option value="transactionName">transaction name</option>
+                    <option value="accountID">account ID</option>
+                    <option value="value">value</option>
+                    <option value="date">date</option>
+                    <option value="memo">memo</option>
+                </select>
+                <label htmlFor="sortAsc">Sort ascending</label>
+                <select id="sortAsc" defaultValue="true" onChange={e => handleSubmitSortAsc(e.target.value)}>
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select>
+            </>
     )
 }
