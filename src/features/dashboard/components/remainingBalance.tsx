@@ -14,7 +14,7 @@ export default function RemainingBalance() {
     return (
         <>
             <span>Remaining</span>
-            <span>{calculateRemaining(transactions).toString()}</span>
+            <span>{calculateRemaining(transactions).toFixed(2)}</span>
         </>
     )
 }

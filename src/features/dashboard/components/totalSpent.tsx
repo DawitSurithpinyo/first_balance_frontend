@@ -16,7 +16,7 @@ export default function TotalSpent() {
     return (
         <>
             <span>Total spent</span>
-            <span>{getTotalSpent(transactions).toString()}</span>
+            <span>{getTotalSpent(transactions).toFixed(2)}</span>
         </>
     )
 }
