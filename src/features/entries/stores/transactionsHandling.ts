@@ -7,7 +7,11 @@ interface transactionHandling {
     selectingTIDs: string[] // currently selected transactions by their ID
     setSortKey: (key: TransactionsSortKeys) => void
     setSortAsc: (asc: boolean) => void
-    addSelectingTIDs: (TIDs: string) => void
+    addOneSelectingTID: (TID: string) => void
+    addManySelectingTIDs: (TIDs: string[]) => void
+    removeOneSelectingTID: (TID: string) => void
+    removeManySelectingTIDs: (TIDs: string[]) => void
+    removeAllSelectingTIDs: () => void
 }
 
 export const useTransactionsHandling = create<transactionHandling>((set) => ({
@@ -22,11 +26,34 @@ export const useTransactionsHandling = create<transactionHandling>((set) => ({
         set(() => ({
             sortAscending: asc
         })),
-    addSelectingTIDs: TID =>
+    addOneSelectingTID: TID =>
         set((state) => ({
             selectingTIDs: [
                 TID,
                 ...state.selectingTIDs
             ]
+        })),
+    addManySelectingTIDs: TIDs =>
+        set((state) => ({
+            selectingTIDs: [
+                ...TIDs,
+                ...state.selectingTIDs
+            ]
+        })),
+    removeOneSelectingTID: targetTID =>
+        set((state) => ({
+            selectingTIDs: state.selectingTIDs.filter((tid) =>
+                tid !== targetTID
+            )
+        })),
+    removeManySelectingTIDs: TIDs => 
+        set((state) => ({
+            selectingTIDs: state.selectingTIDs.filter((tid) => 
+                !TIDs.includes(tid)
+            )
+        })),
+    removeAllSelectingTIDs: () => 
+        set(() => ({
+            selectingTIDs: []
         }))
 }))
