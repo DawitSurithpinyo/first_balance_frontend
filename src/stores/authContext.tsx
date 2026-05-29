@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, use, useState } from "react";
 import { type GoogleUser, type NormalUser } from "@/features/login/types/userAuth";
 
 
@@ -16,7 +16,7 @@ export interface createAuthContextState {
 const AuthContext = createContext<createAuthContextState | undefined>(undefined);
 
 export function useAuthContext() {
-    const context = useContext(AuthContext);
+    const context = use(AuthContext);
     if(!context) {
       throw new Error('AuthContext must be used inside AuthContext Provider');
     }
@@ -50,8 +50,8 @@ export function AuthProvider({children}: {children:React.ReactNode}) {
     }
 
     return(
-        <AuthContext.Provider value={{credentials, csrfToken, setCSRFToken, login, logout, sessionIsChecked, setSessionIsChecked}}>
+        <AuthContext value={{credentials, csrfToken, setCSRFToken, login, logout, sessionIsChecked, setSessionIsChecked}}>
             {children}
-        </AuthContext.Provider>
+        </AuthContext>
     )
 }

@@ -139,7 +139,7 @@ export const api = {
     patch: (
         endpoint: string, 
         csrfToken: string,
-        setCSRFTokenFunc: (token: string) => void, 
+        setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
     ): Promise<ApiResult> => 
@@ -153,7 +153,7 @@ export const api = {
     delete: (
         endpoint: string, 
         csrfToken: string,
-        setCSRFTokenFunc: (token: string) => void, 
+        setCSRFTokenFunc?: (token: string) => void, 
         data?: unknown,
         options?: RequestInit
     ): Promise<ApiResult> => 

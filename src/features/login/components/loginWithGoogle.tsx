@@ -21,7 +21,7 @@ export default function LoginWithGoogle() {
 
     return (
         <button id="login-with-google-btn" onClick={googleLogin}>
-            <img src="/google_logo.png" id="google-logo"></img>
+            <img src="src/features/login/assets/google_logo.png" id="google-logo"></img>
             <span id="google-login-text">Login with Google</span>
         </button>
     )
