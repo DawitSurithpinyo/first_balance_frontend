@@ -1,12 +1,12 @@
 import z from 'zod'
 
 export const transaction = z.object({
-    transactionID: z.string(),
-    transactionName: z.string(),
-    accountID: z.string(),
+    transactionID: z.string().max(30),
+    transactionName: z.string().max(500),
+    accountID: z.string().max(500),
     value: z.number(),
     date: z.coerce.date(),
-    memo: z.string().optional().nullable()
+    memo: z.string().max(500).optional().nullable()
 })
 
 export const transactionsArray = z.array(transaction)
