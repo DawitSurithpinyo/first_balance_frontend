@@ -12,6 +12,9 @@ interface TransactionsState {
         field: K, 
         newVal: Transaction[K]
     ) => void
+    removeOneTransaction: (TID: string) => void
+    removeManyTransactions: (TIDs: string[]) => void
+    removeAllTransactions: () => void
     setNeedRefetch: (b: boolean) => void
 }
 
@@ -53,4 +56,20 @@ export const useTransactions = create<TransactionsState>((set) => ({
         set(() => ({
             needRefetch: b
         })),
+    removeOneTransaction: TID =>
+        set((state) => ({
+            transactions: state.transactions.filter((t) =>
+                t.transactionID !== TID
+            )
+        })),
+    removeManyTransactions: TIDs =>
+        set((state) => ({
+            transactions: state.transactions.filter((t) =>
+                !TIDs.includes(t.transactionID)
+            )
+        })),
+    removeAllTransactions: () => 
+        set(() => ({
+            transactions: []
+        }))
 }))
