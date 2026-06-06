@@ -18,8 +18,10 @@ import deleteOneTransaction from "@/features/entries/lib/deleteOneTransaction"
 import deleteManyTransactions from "@/features/entries/lib/deleteManyTransactions"
 import createTransaction from "@/features/entries/lib/createOneTransaction"
 import type { CreateTransactionBody, CreateTransactionResponse } from "@/features/entries/types/createTransaction"
+import { tempTransactionFormDefault, type TempTransactionForm } from "../types/tempTransactionForm"
 
 import { useState } from "react"
+import isEqual from 'lodash/isEqual';
 
 export default function Table() {
     const { csrfToken } = useAuthContext()
@@ -132,13 +134,6 @@ export default function Table() {
                 setOriginalValue(null)
                 return
             }
-
-            // For holding the updated + validated value to be assigned to Zustand after successful API call
-            // assigning the updated value to useState's editedValue via setEditedValue doesn't actually work
-            // because editedValue is from useState(), which is asynchronous. 
-            // So it won't actually change immediately (not until the next render), which is way after the API call.
-            // Within this function, editedValue would still be the old, not-yet-validated string assigned by handleCellChange()
-            // when the user was still typing changes to the cell.
             let newStateValue: string | number | Date | null = null
 
             // validation + build request body
@@ -311,62 +306,24 @@ export default function Table() {
         )
     }
 
-    // create button on top (Toolbar) that always display
-    // When clicked, button is disabled
-    // display a "form" as one row with input textbox for each field at the bottom of the real table
-    // with only one <td> row (date placeholder MM/dd/yyyy)
-    // User enter data for each column, then have the confirm + cancel buttons on the right
-    // On cancel, remove the form, enable the create button again.
-    // On confirm, validate, call API, add to Zustand, enable create button again.
     const [createIsEnabled, setCreateIsEnabled] = useState<boolean>(false)
-    const [creatingTName, setCreatingTName] = useState<string | null>(null)
-    const [creatingTAccID, setCreatingTAccID] = useState<string | null>(null)
-    const [creatingTValue, setCreatingTValue] = useState<string | null>(null)
-    const [creatingTDate, setCreatingTDate] = useState<string | null>(null)
-    const [creatingTMemo, setCreatingTMemo] = useState<string | null>(null)
+    const [creatingTransaction, setCreatingTransaction] = useState<TempTransactionForm>(tempTransactionFormDefault)
 
     function handleCreateTransactionChange(
-        e: React.FormEvent<HTMLInputElement>,
+        val: string,
         field: TransactionsEditableFields
     ): void {
-        switch (field) {
-            case "transactionName": {
-                setCreatingTName(e.currentTarget.value)
-                break
-            }
-            case "accountID": {
-                setCreatingTAccID(e.currentTarget.value)
-                break
-            }
-            case "value": {
-                setCreatingTValue(e.currentTarget.value)
-                break
-            }
-            case "date": {
-                setCreatingTDate(e.currentTarget.value)
-                break
-            }
-            case "memo": {
-                setCreatingTMemo(e.currentTarget.value)
-            }
-        }
+        setCreatingTransaction(t => ({...t, [field]: val}))
     }
 
-    function handleCancelCreateTransaction(): void {
+    function handleCancelOrFinishCreateTransaction(): void {
         setCreateIsEnabled(false)
-        setCreatingTName(null)
-        setCreatingTAccID(null)
-        setCreatingTValue(null)
-        setCreatingTDate(null)
-        setCreatingTMemo(null)
+        setCreatingTransaction(tempTransactionFormDefault)
     }
 
     async function handleConfirmCreateTransaction(): Promise<void> {
         try {
-            if (creatingTName == null && creatingTAccID == null &&
-                creatingTValue == null && creatingTDate == null &&
-                creatingTMemo == null
-            ) {
+            if (isEqual(creatingTransaction, tempTransactionFormDefault)) {
                 // Don't do anything if all fields are empty
                 return
             }
@@ -379,14 +336,14 @@ export default function Table() {
             }
 
             // validation
-            finalT.transactionName = validateString(creatingTName)
-            finalT.accountID = validateString(creatingTAccID)
-            finalT.value = parseStringToNumber(creatingTValue)
+            finalT.transactionName = validateString(creatingTransaction.transactionName)
+            finalT.accountID = validateString(creatingTransaction.accountID)
+            finalT.value = parseStringToNumber(creatingTransaction.value)
 
-            let tempDate = validateDateString(creatingTDate, "MM/dd/yyyy")
+            let tempDate = validateDateString(creatingTransaction.date, "MM/dd/yyyy")
             finalT.date = parseStringToDate(tempDate)
 
-            let tempMemo = validateOptionalString(creatingTMemo ?? "")
+            let tempMemo = validateOptionalString(creatingTransaction.memo ?? "")
             finalT.memo = tempMemo === "" ? null : tempMemo
 
             // API call
@@ -401,7 +358,7 @@ export default function Table() {
             }
             addOneTransaction(successTransaction)
             setTransactionsNeedRefetch(true)
-            handleCancelCreateTransaction() // misleading name, just reusing function that calls state setters to set back to default
+            handleCancelOrFinishCreateTransaction()
         }
         catch (e) {
             console.log(e)
@@ -419,27 +376,27 @@ export default function Table() {
                 <input 
                     type="text"
                     placeholder="Name"
-                    onInput={e => handleCreateTransactionChange(e, "transactionName")}
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "transactionName")}
                 />
                 <input 
                     type="text"
                     placeholder="Account ID"
-                    onInput={e => handleCreateTransactionChange(e, "accountID")}
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "accountID")}
                 />
                 <input 
                     type="text"
                     placeholder="Value (any number)"
-                    onInput={e => handleCreateTransactionChange(e, "value")}
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "value")}
                 />
                 <input 
                     type="text"
                     placeholder="Date (MM/dd/yyyy)"
-                    onInput={e => handleCreateTransactionChange(e, "date")}
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "date")}
                 />
                 <input 
                     type="text"
                     placeholder="Memo"
-                    onInput={e => handleCreateTransactionChange(e, "memo")}
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "memo")}
                 />
                 <input
                     type="button"
@@ -449,7 +406,7 @@ export default function Table() {
                 <input
                     type="button"
                     value="Cancel"
-                    onClick={() => handleCancelCreateTransaction()}
+                    onClick={() => handleCancelOrFinishCreateTransaction()}
                 />
             </div>
         )
