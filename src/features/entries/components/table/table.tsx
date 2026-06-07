@@ -15,23 +15,16 @@ import { validateString, parseStringToNumber,
 } from "@/features/entries/utils/validateInputs"
 import patchTransaction from "@/features/entries/lib/patchTransaction"
 import deleteOneTransaction from "@/features/entries/lib/deleteOneTransaction"
-import deleteManyTransactions from "@/features/entries/lib/deleteManyTransactions"
-import createTransaction from "@/features/entries/lib/createOneTransaction"
-import type { CreateTransactionBody, CreateTransactionResponse } from "@/features/entries/types/createTransaction"
-import { tempTransactionFormDefault, type TempTransactionForm } from "../types/tempTransactionForm"
 
 import { useState } from "react"
-import isEqual from 'lodash/isEqual';
 
 export default function Table() {
     const { csrfToken } = useAuthContext()
+    
     const transactions = useTransactions((state) => state.transactions)
     const setTransactionsNeedRefetch = useTransactions((state) => state.setNeedRefetch)
-    const addOneTransaction = useTransactions((state) => state.addOneTransaction)
     const updateOneTransaction = useTransactions((state) => state.updateOneTransaction)
     const removeOneTransaction = useTransactions((state) => state.removeOneTransaction)
-    const removeManyTransactions = useTransactions((state) => state.removeManyTransactions)
-    const removeAllTransactions = useTransactions((state) => state.removeAllTransactions)
 
     const sortKey = useTransactionsHandling((state) => state.sortKey)
     const sortAscending = useTransactionsHandling((state) => state.sortAscending)
@@ -39,10 +32,7 @@ export default function Table() {
     // Checkboxes on each row
     const selectingTIDs = useTransactionsHandling((state) => state.selectingTIDs)
     const addOneSelectingTID = useTransactionsHandling((state) => state.addOneSelectingTID)
-    const addManySelectingTIDs = useTransactionsHandling((state) => state.addManySelectingTIDs)
     const removeOneSelectingTID = useTransactionsHandling((state) => state.removeOneSelectingTID)
-    const removeManySelectingTID = useTransactionsHandling((state) => state.removeManySelectingTIDs)
-    const removeAllSelectingTIDs = useTransactionsHandling((state) => state.removeAllSelectingTIDs)
 
     function handleSelectCheckbox(e: React.ChangeEvent<HTMLInputElement>, TID: string): void {
         if(e.currentTarget.checked) {
@@ -50,21 +40,6 @@ export default function Table() {
             return
         }
         removeOneSelectingTID(TID)
-    }
-
-    function handleSelectAll(): void {
-        let remainingTIDs: string[] = []
-        for(let i = 0; i < transactions.length; i++) {
-            if(selectingTIDs.includes(transactions[i].transactionID)) {
-                continue
-            }
-            remainingTIDs.push(transactions[i].transactionID)
-        }
-        addManySelectingTIDs(remainingTIDs)
-    }
-
-    function handleDeselectAll(): void {
-        removeAllSelectingTIDs()
     }
 
     async function handleDeleteOne(TID: string): Promise<void> {
@@ -80,32 +55,6 @@ export default function Table() {
             setTransactionsNeedRefetch(true)
             removeOneSelectingTID(TID)
             removeOneTransaction(TID)
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    async function handleDeleteManyOrAll(): Promise<void> {
-        try {
-            if (selectingTIDs.length === 0) {
-                return
-            }
-            if (!selectingTIDs.every((tid) => transactions.map(t => t.transactionID).includes(tid))) {
-                throw new Error("There are selected IDs that are not inside the actual list of transactions.")
-            }
-
-            if (selectingTIDs.length < transactions.length) {
-                await deleteManyTransactions({transactionIDsList: selectingTIDs}, csrfToken ?? "")
-                setTransactionsNeedRefetch(true)
-                removeManySelectingTID(selectingTIDs)
-                removeManyTransactions(selectingTIDs)
-                return
-            }
-            await deleteManyTransactions({transactionIDsList: transactions.map(t => t.transactionID)}, csrfToken ?? "")
-            setTransactionsNeedRefetch(true)
-            removeAllSelectingTIDs()
-            removeAllTransactions()
         }
         catch (e) {
             console.log(e)
@@ -306,180 +255,8 @@ export default function Table() {
         )
     }
 
-    const [createIsEnabled, setCreateIsEnabled] = useState<boolean>(false)
-    const [creatingTransaction, setCreatingTransaction] = useState<TempTransactionForm>(tempTransactionFormDefault)
-
-    function handleCreateTransactionChange(
-        val: string,
-        field: TransactionsEditableFields
-    ): void {
-        setCreatingTransaction(t => ({...t, [field]: val}))
-    }
-
-    function handleCancelOrFinishCreateTransaction(): void {
-        setCreateIsEnabled(false)
-        setCreatingTransaction(tempTransactionFormDefault)
-    }
-
-    async function handleConfirmCreateTransaction(): Promise<void> {
-        try {
-            if (isEqual(creatingTransaction, tempTransactionFormDefault)) {
-                // Don't do anything if all fields are empty
-                return
-            }
-            let finalT: CreateTransactionBody = {
-                transactionName: '',
-                accountID: '',
-                value: 0,
-                date: new Date(),
-                memo: null
-            }
-
-            // validation
-            finalT.transactionName = validateString(creatingTransaction.transactionName)
-            finalT.accountID = validateString(creatingTransaction.accountID)
-            finalT.value = parseStringToNumber(creatingTransaction.value)
-
-            let tempDate = validateDateString(creatingTransaction.date, "MM/dd/yyyy")
-            finalT.date = parseStringToDate(tempDate)
-
-            let tempMemo = validateOptionalString(creatingTransaction.memo ?? "")
-            finalT.memo = tempMemo === "" ? null : tempMemo
-
-            // API call
-            const res: CreateTransactionResponse = await createTransaction(finalT, csrfToken ?? "")
-            const successTransaction: Transaction = {
-                transactionID: res.insertedID,
-                transactionName: finalT.transactionName,
-                accountID: finalT.accountID,
-                value: finalT.value,
-                date: finalT.date,
-                memo: finalT.memo
-            }
-            addOneTransaction(successTransaction)
-            setTransactionsNeedRefetch(true)
-            handleCancelOrFinishCreateTransaction()
-        }
-        catch (e) {
-            console.log(e)
-        }
-    }
-
-    function displayCreateTransactionForm(): React.ReactNode {
-        if (!createIsEnabled) {
-            return (
-                <></>
-            )
-        }
-        return (
-            <div style={{display: "flex"}}>
-                <input 
-                    type="text"
-                    placeholder="Name"
-                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "transactionName")}
-                />
-                <input 
-                    type="text"
-                    placeholder="Account ID"
-                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "accountID")}
-                />
-                <input 
-                    type="text"
-                    placeholder="Value (any number)"
-                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "value")}
-                />
-                <input 
-                    type="text"
-                    placeholder="Date (MM/dd/yyyy)"
-                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "date")}
-                />
-                <input 
-                    type="text"
-                    placeholder="Memo"
-                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "memo")}
-                />
-                <input
-                    type="button"
-                    value="Submit"
-                    onClick={async () => await handleConfirmCreateTransaction()}
-                />
-                <input
-                    type="button"
-                    value="Cancel"
-                    onClick={() => handleCancelOrFinishCreateTransaction()}
-                />
-            </div>
-        )
-    }
-
-    function displaySelectOptions(): React.ReactNode {
-        if (transactions.length === 0) {
-            return (
-                <></>
-            )
-        }
-        if (selectingTIDs.length === 0) {
-            return (
-                <input 
-                    type="submit"
-                    value="Select all"
-                    onClick={() => handleSelectAll()}
-                />
-            )
-        }
-        else if (selectingTIDs.length > 0 && selectingTIDs.length < transactions.length) {
-            // Only some rows selected
-            return (
-                <>
-                    <input 
-                        type="submit"
-                        value="Select all"
-                        onClick={() => handleSelectAll()}
-                    />
-                    <input 
-                        type="submit"
-                        value="Deselect all"
-                        onClick={() => handleDeselectAll()}
-                    />
-                </>
-            )
-        }
-        else if (selectingTIDs.length === transactions.length) {
-            return (
-                <input 
-                    type="submit"
-                    value="Deselect all"
-                    onClick={() => handleDeselectAll()}
-                />
-            )
-        }
-    }
-
-    function displayDeleteEntriesButton(): React.ReactNode {
-        if (selectingTIDs.length === 0) {
-            return (
-                <></>
-            )
-        }
-        return (
-            <input 
-                type="submit"
-                value="Delete all selected"
-                onClick={async () => await handleDeleteManyOrAll()}
-            />         
-        )
-    }
-
     return (
         <>
-            {displaySelectOptions()}
-            {displayDeleteEntriesButton()}
-            <input 
-                type="button" 
-                value="Create a new entry"
-                disabled={createIsEnabled}
-                onClick={() => setCreateIsEnabled(true)}
-            />
             <table>
                 <thead>
                     <tr>
@@ -496,7 +273,6 @@ export default function Table() {
                     {displayRows(transactions, sortKey, sortAscending)}               
                 </tbody>
             </table>
-            {displayCreateTransactionForm()}
         </>
     )
 }
