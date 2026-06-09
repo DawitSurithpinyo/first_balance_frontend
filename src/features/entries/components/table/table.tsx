@@ -255,6 +255,10 @@ export default function Table() {
         )
     }
 
+    if (transactions.length === 0) {
+        return undefined
+    }
+
     return (
         <>
             <table>
