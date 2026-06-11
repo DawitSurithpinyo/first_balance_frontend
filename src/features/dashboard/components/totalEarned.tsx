@@ -16,7 +16,7 @@ export default function TotalEarned() {
     return (
         <>
             <span>Total earned</span>
-            <span>{getTotalEarned(transactions).toString()}</span>
+            <span>{getTotalEarned(transactions).toFixed(2)}</span>
         </>
     )
 }

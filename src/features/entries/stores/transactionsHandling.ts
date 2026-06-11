@@ -3,21 +3,24 @@ import { type TransactionsSortKeys } from "@/types/transactions";
 
 interface transactionHandling {
     sortKey: TransactionsSortKeys
-    sortAscending: boolean
-    selectingTIDs: string[] // currently selected transactions by their ID
     setSortKey: (key: TransactionsSortKeys) => void
+    sortAscending: boolean
     setSortAsc: (asc: boolean) => void
+    selectingTIDs: string[] // currently selected transactions by their ID
     addOneSelectingTID: (TID: string) => void
     addManySelectingTIDs: (TIDs: string[]) => void
     removeOneSelectingTID: (TID: string) => void
     removeManySelectingTIDs: (TIDs: string[]) => void
     removeAllSelectingTIDs: () => void
+    creatingIsEnabled: boolean // whether the creating form is opened currently
+    setCreatingIsEnabled: (v: boolean) => void
 }
 
 export const useTransactionsHandling = create<transactionHandling>((set) => ({
     sortKey: "date",
     sortAscending: true,
     selectingTIDs: [],
+    creatingIsEnabled: false,
     setSortKey: key => 
         set(() => ({
             sortKey: key
@@ -55,5 +58,10 @@ export const useTransactionsHandling = create<transactionHandling>((set) => ({
     removeAllSelectingTIDs: () => 
         set(() => ({
             selectingTIDs: []
+        }))
+    ,
+    setCreatingIsEnabled: (v: boolean) => 
+        set(() => ({ 
+            creatingIsEnabled: v 
         }))
 }))
