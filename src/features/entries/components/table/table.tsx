@@ -91,33 +91,33 @@ export default function Table() {
             }
             switch (editedField) {
                 case "transactionName": {
-                    let validated = validateString(editedValue)
+                    const validated = validateString(editedValue)
                     newTransaction.transactionName = validated
                     newStateValue = validated
                     break
                 }
                 case "accountID": {
-                    let validated = validateString(editedValue)
+                    const validated = validateString(editedValue)
                     newTransaction.accountID = validated
                     newStateValue = validated
                     break
                 }
                 case "value": {
-                    let parsed = parseStringToNumber(editedValue)
+                    const parsed = parseStringToNumber(editedValue)
                     newTransaction.value = parsed
                     newStateValue = parsed
                     break
                 }
                 case "date": {
-                    let temp = validateDateString(editedValue, "MM/dd/yyyy")
-                    let parsed = parseStringToDate(temp)
+                    const temp = validateDateString(editedValue, "MM/dd/yyyy")
+                    const parsed = parseStringToDate(temp)
                     newTransaction.date = parsed
                     newStateValue = parsed
                     break
                 }
                 case "memo": {
-                    let temp = validateOptionalString(editedValue)
-                    let normalized = temp === "" ? null : temp
+                    const temp = validateOptionalString(editedValue)
+                    const normalized = temp === "" ? null : temp
                     newTransaction.memo = normalized
                     newStateValue = normalized
                     break
