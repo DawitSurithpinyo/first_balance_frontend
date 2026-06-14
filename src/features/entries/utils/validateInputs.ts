@@ -15,7 +15,7 @@ export function parseStringToNumber(input: any): number {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }
-    let t = Number(input)
+    const t = Number(input)
     if (isNaN(t)) {
         throw new Error("Input is not a number.")
     }
@@ -41,7 +41,7 @@ export function parseStringToDate(input: any): Date {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }
-    let d = new Date(input)
+    const d = new Date(input)
     if (isNaN(d.getTime())) {
         throw new Error("Input is not a valid date-like string.")
     }

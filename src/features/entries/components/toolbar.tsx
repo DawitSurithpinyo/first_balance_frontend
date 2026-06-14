@@ -31,7 +31,7 @@ export default function Toolbar() {
         setSortKey(key)
     }
     function handleSubmitSortAsc(asc: string): void {
-        let ascLow = asc.toLowerCase()
+        const ascLow = asc.toLowerCase()
         if (ascLow != 'true' && ascLow != 'false') {
             console.error("Input for setting whether to sort transactions ascending should be 'true' or 'false' only.")
             return
@@ -41,7 +41,7 @@ export default function Toolbar() {
 
 
     function handleSelectAll(): void {
-        let remainingTIDs: string[] = []
+        const remainingTIDs: string[] = []
         for(let i = 0; i < transactions.length; i++) {
             if(selectingTIDs.includes(transactions[i].transactionID)) {
                 continue

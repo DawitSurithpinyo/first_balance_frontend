@@ -45,7 +45,7 @@ export default function CreateForm() {
                 // Don't do anything if all fields are empty
                 return
             }
-            let finalT: CreateTransactionBody = {
+            const finalT: CreateTransactionBody = {
                 transactionName: '',
                 accountID: '',
                 value: 0,
@@ -58,10 +58,10 @@ export default function CreateForm() {
             finalT.accountID = validateString(creatingTransaction.accountID)
             finalT.value = parseStringToNumber(creatingTransaction.value)
 
-            let tempDate = validateDateString(creatingTransaction.date, "MM/dd/yyyy")
+            const tempDate = validateDateString(creatingTransaction.date, "MM/dd/yyyy")
             finalT.date = parseStringToDate(tempDate)
 
-            let tempMemo = validateOptionalString(creatingTransaction.memo ?? "")
+            const tempMemo = validateOptionalString(creatingTransaction.memo ?? "")
             finalT.memo = tempMemo === "" ? null : tempMemo
 
             // API call
