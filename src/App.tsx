@@ -40,11 +40,11 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
 
 function App() {
 
-  const {credentials, login, setCSRFToken, setSessionIsChecked} = useAuthContext();
+  const {credentials, login, setCSRFToken, setSessionChecked} = useAuthContext();
 
   useEffect(() => {
     const run = async() => {
-      await getCredentials(setCSRFToken, login, setSessionIsChecked);
+      await getCredentials(setCSRFToken, login, setSessionChecked);
     };
     run();
   }, []);
