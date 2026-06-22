@@ -10,5 +10,9 @@ export default defineConfig({
     },
   },
   plugins: [react()],
-  envDir: './env'
+  server: {
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    }
+  }
 })

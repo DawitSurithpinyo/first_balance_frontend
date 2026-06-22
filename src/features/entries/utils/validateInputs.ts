@@ -1,7 +1,7 @@
 // import { isValidDate } from "@/utils/sortTransactions"
 import { parse, isValid } from "date-fns"
 
-export function validateString(input: any): string {
+export function validateString(input: string): string {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }
@@ -11,7 +11,7 @@ export function validateString(input: any): string {
     return input
 }
 
-export function parseStringToNumber(input: any): number {
+export function parseStringToNumber(input: string): number {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }
@@ -24,7 +24,7 @@ export function parseStringToNumber(input: any): number {
 
 export type DateFormats = "MM/dd/yyyy" // possibly add more in the future, or move picking date format to Zustand
 export function validateDateString(
-    input: any,
+    input: string,
     expectedFormat: DateFormats
 ): string {
     if (typeof input != "string") {
@@ -37,7 +37,7 @@ export function validateDateString(
     return input
 }
 
-export function parseStringToDate(input: any): Date {
+export function parseStringToDate(input: string): Date {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }
@@ -48,7 +48,7 @@ export function parseStringToDate(input: any): Date {
     return d
 }
 
-export function validateOptionalString(input: any): string {
+export function validateOptionalString(input: string): string {
     if (typeof input != "string") {
         throw new Error("Input is not a string.")
     }

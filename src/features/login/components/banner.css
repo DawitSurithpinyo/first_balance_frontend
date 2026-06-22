@@ -1,5 +1,5 @@
 #banner-div {
-    background-image: url("src/features/login/assets/login_page_banner.png");
+    background-image: url("../assets/login_page_banner.png");
     background-size: cover;
     width: 100vw;
     background-position: center;

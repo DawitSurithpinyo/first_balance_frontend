@@ -1,4 +1,5 @@
 import './loginWithGoogle.css'
+import googleLogo from '../assets/google_logo.png'
 import { useGoogleLoginHook } from '../hooks/useGoogleLogin';
 import { type GoogleUser } from '../types/userAuth';
 import { useAuthContext } from "@/stores/authContext";
@@ -21,7 +22,7 @@ export default function LoginWithGoogle() {
 
     return (
         <button id="login-with-google-btn" onClick={googleLogin}>
-            <img src="src/features/login/assets/google_logo.png" id="google-logo"></img>
+            <img src={googleLogo} id="google-logo"></img>
             <span id="google-login-text">Login with Google</span>
         </button>
     )
