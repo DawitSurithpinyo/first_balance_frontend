@@ -1,3 +1,4 @@
+import defaultProfile from '../assets/profile_placeholder.png'
 import logoutAPI from "@/features/setting/lib/logout"
 
 import { useAuthContext } from "@/stores/authContext"
@@ -10,7 +11,7 @@ export default function Setting() {
             throw new Error("No credentials")
         }
         if (credentials.signUpChoice == "MANUAL") {
-            return "src/features/setting/assets/profile_placeholder.png"
+            return defaultProfile
         }
         return credentials.userPictureLink
     }
