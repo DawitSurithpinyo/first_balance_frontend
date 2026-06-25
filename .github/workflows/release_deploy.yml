@@ -66,7 +66,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           push: true
-          tags: 
+          tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/front:${{ env.NEW_VERSION }}
             ${{ vars.DOCKERHUB_USERNAME }}/front:latest
 
