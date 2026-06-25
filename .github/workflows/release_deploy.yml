@@ -1,9 +1,11 @@
 name: release and deploy
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: 
+      main
+    types: 
+      [closed]
 
 jobs:
   build_and_release:
