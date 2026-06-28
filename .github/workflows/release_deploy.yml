@@ -66,6 +66,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           push: true
+          platforms: linux/amd64,linux/arm64 
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/front:${{ env.NEW_VERSION }}
             ${{ vars.DOCKERHUB_USERNAME }}/front:latest
@@ -76,7 +77,13 @@ jobs:
     permissions:
       contents: read
     steps:
-      - run: 
-          echo "SSH into EC2 instance"
-          echo "SCP repository secrets to .env"
-          echo "Restart Docker compose"
+      - name: SSH and restart with latest image
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd ~/app
+            docker compose pull front
+            docker compose up -d front
