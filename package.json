@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-img": "docker buildx build --platform linux/amd64,linux/arm64 -t front ."
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.4",
