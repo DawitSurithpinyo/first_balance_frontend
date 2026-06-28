@@ -4,10 +4,45 @@ on:
   pull_request:
     branches:
       - main
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - labeled
+      - unlabeled
     
 jobs:
+  validate_label:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: check and validate PR label
+        run: |
+          LABELS="${{ join(github.event.pull_request.labels.*.name, ' ') }}"
+
+          COUNT=0
+
+          if [[ "$LABELS" =~ (^| )major($| ) ]]; then
+            COUNT=$((COUNT + 1))
+          elif [[ "$LABELS" =~ (^| )minor($| ) ]]; then
+            COUNT=$((COUNT + 1))
+          elif [[ "$LABELS" =~ (^| )patch($| ) ]]; then
+            COUNT=$((COUNT + 1))
+          fi
+
+          if [ "$COUNT" -ne 1 ]; then
+            echo "PR must have exactly one of: major, minor, patch"
+            exit 1
+          fi
+
+
   setup_and_lint:
     runs-on: ubuntu-latest
+    needs: validate_label
     strategy:
       matrix:
         node-version: [25]
@@ -56,4 +91,5 @@ jobs:
       - name: Test build
         uses: docker/build-push-action@v7
         with:
+          platforms: linux/amd64,linux/arm64 
           push: false
