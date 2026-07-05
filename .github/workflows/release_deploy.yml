@@ -71,6 +71,7 @@ jobs:
             ${{ vars.DOCKERHUB_USERNAME }}/front:${{ env.NEW_VERSION }}
             ${{ vars.DOCKERHUB_USERNAME }}/front:latest
 
+            
   deploy:
     needs: build_and_release
     runs-on: ubuntu-latest

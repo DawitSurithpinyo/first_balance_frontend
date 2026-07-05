@@ -2,9 +2,11 @@ import defaultProfile from '../assets/profile_placeholder.png'
 import logoutAPI from "@/features/setting/lib/logout"
 
 import { useAuthContext } from "@/stores/authContext"
+import { useTransactions } from '@/stores/transactionsStore'
 
 export default function Setting() {
     const { credentials, logout, csrfToken, setCSRFToken } = useAuthContext()
+    const setTransactionsNeedRefetch = useTransactions((state) => state.setNeedRefetch)
 
     function displayProfilePic(): string {
         if (!credentials) {
@@ -18,7 +20,11 @@ export default function Setting() {
 
     async function handleLogout() {
         try {
-            await logoutAPI(csrfToken ?? "", setCSRFToken)
+            await logoutAPI(
+                csrfToken ?? "", 
+                setCSRFToken,
+                setTransactionsNeedRefetch
+            )
             logout()
         }
         catch (e) {
