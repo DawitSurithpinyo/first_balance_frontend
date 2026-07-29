@@ -12,9 +12,9 @@ export default function RemainingBalance() {
     }
 
     return (
-        <>
-            <span>Remaining</span>
+        <div id="remaining">
+            <strong>Remaining</strong>
             <span>{calculateRemaining(transactions).toFixed(2)}</span>
-        </>
+        </div>
     )
 }

@@ -1,6 +1,8 @@
 import { useTransactionsHandling } from "@/features/entries/stores/transactionsHandling"
 import deleteManyTransactions from "@/features/entries/lib/deleteManyTransactions"
 
+import "@/features/entries/components/entries.css"
+
 import { useTransactions } from "@/stores/transactionsStore"
 import { useAuthContext } from "@/stores/authContext"
 import type { TransactionsSortKeys } from "@/types/transactions"
@@ -127,6 +129,7 @@ export default function Toolbar() {
         }
         return (
             <input 
+                id="deleteAllSelected"
                 type="submit"
                 value="Delete all selected"
                 onClick={async () => await handleDeleteManyOrAll()}
@@ -155,28 +158,34 @@ export default function Toolbar() {
     }
 
     return (
-        <>
+        <div id="toolbar">
             {/* sorting */}
-            <label htmlFor="sortKey">Sort by:</label>
-            <select id="sortKey" defaultValue="date" onChange={e => handleSubmitSortKey(e.target.value as TransactionsSortKeys)}>
-                <option value="transactionName">transaction name</option>
-                <option value="accountID">account ID</option>
-                <option value="value">value</option>
-                <option value="date">date</option>
-                <option value="memo">memo</option>
-            </select>
-            <label htmlFor="sortAsc">Sort ascending</label>
-            <select id="sortAsc" defaultValue="true" onChange={e => handleSubmitSortAsc(e.target.value)}>
-                <option value="true">true</option>
-                <option value="false">false</option>
-            </select>
+            <div id="sort">
+                <label htmlFor="sortKey">Sort by:</label>
+                <select id="sortKey" defaultValue="date" onChange={e => handleSubmitSortKey(e.target.value as TransactionsSortKeys)}>
+                    <option value="transactionName">transaction name</option>
+                    <option value="accountID">account ID</option>
+                    <option value="value">value</option>
+                    <option value="date">date</option>
+                    <option value="memo">memo</option>
+                </select>
+                <label htmlFor="sortAsc">Sort ascending</label>
+                <select id="sortAsc" defaultValue="true" onChange={e => handleSubmitSortAsc(e.target.value)}>
+                    <option value="true">true</option>
+                    <option value="false">false</option>
+                </select>
+            </div>
 
             {/* select, deselect, delete */}
-            {displaySelectOptions()}
-            {displayDeleteEntriesButton()}
+            <div id="select">
+                {displaySelectOptions()}
+                {displayDeleteEntriesButton()}
+            </div>
 
             {/* create */}
-            {displayCreateButton()}
-        </>
+            <div id="create">
+                {displayCreateButton()}
+            </div>
+        </div>
     )
 }
