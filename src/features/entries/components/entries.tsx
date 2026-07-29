@@ -1,9 +1,10 @@
 import { useTransactions } from "@/stores/transactionsStore"
 import getTransactions from "@/lib/getTransactions"
 
-import Table from "./table/table"
-import Toolbar from "./toolbar"
-import CreateForm from "./table/createForm"
+import "@/features/entries/components/entries.css"
+import Table from "@/features/entries/components/table/table"
+import Toolbar from "@/features/entries/components/toolbar"
+import CreateForm from "@/features/entries/components/table/createForm"
 
 import { useEffect } from "react"
 
@@ -22,10 +23,10 @@ export default function Entries() {
     }, [])
 
     return (
-        <>
+        <div id="entries">
             <Toolbar/>
             <Table/>
             <CreateForm/>
-        </>
+        </div>
     )
 }

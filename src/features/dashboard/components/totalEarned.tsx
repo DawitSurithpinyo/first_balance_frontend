@@ -14,9 +14,9 @@ export default function TotalEarned() {
     }
     
     return (
-        <>
-            <span>Total earned</span>
+        <div id="earned">
+            <strong>Total earned</strong>
             <span>{getTotalEarned(transactions).toFixed(2)}</span>
-        </>
+        </div>
     )
 }

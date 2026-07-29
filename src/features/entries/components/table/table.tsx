@@ -244,6 +244,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input 
+                                id="deleteOne"
                                 type="submit" 
                                 value="Delete"
                                 onClick={async () => await handleDeleteOne(t.transactionID)}
@@ -260,23 +261,21 @@ export default function Table() {
     }
 
     return (
-        <>
-            <table>
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Account ID</th>
-                        <th>Value</th>
-                        <th>Date</th>
-                        <th>Memo (optional)</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {displayRows(transactions, sortKey, sortAscending)}               
-                </tbody>
-            </table>
-        </>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Account ID</th>
+                    <th>Value</th>
+                    <th>Date</th>
+                    <th>Memo (optional)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {displayRows(transactions, sortKey, sortAscending)}               
+            </tbody>
+        </table>
     )
 }

@@ -1,6 +1,7 @@
-import RemainingBalance from "./remainingBalance"
-import TotalSpent from "./totalSpent"
-import TotalEarned from "./totalEarned"
+import "@/features/dashboard/components/dashboard.css"
+import RemainingBalance from "@/features/dashboard/components/remainingBalance"
+import TotalSpent from "@/features/dashboard/components/totalSpent"
+import TotalEarned from "@/features/dashboard/components/totalEarned"
 
 import { useTransactions } from "@/stores/transactionsStore"
 import getTransactions from "@/lib/getTransactions"
@@ -32,10 +33,12 @@ export default function Dashboard() {
         )
     }
     return (
-        <>
-            <RemainingBalance/>
-            <TotalSpent/>
-            <TotalEarned/>
-        </>
+        <section>
+            <div id="mainStat">
+                <RemainingBalance/>
+                <TotalSpent/>
+                <TotalEarned/>
+            </div>
+        </section>
     )
 }

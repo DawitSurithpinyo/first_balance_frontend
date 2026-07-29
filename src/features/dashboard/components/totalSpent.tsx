@@ -14,9 +14,9 @@ export default function TotalSpent() {
     }
 
     return (
-        <>
-            <span>Total spent</span>
+        <div id="spent">
+            <strong>Total spent</strong>
             <span>{getTotalSpent(transactions).toFixed(2)}</span>
-        </>
+        </div>
     )
 }

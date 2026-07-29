@@ -6,11 +6,20 @@
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
+  --page-background: #242424;
+  --navbar-height: 10%;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 a {
@@ -22,9 +31,13 @@ a:hover {
   color: #535bf2;
 }
 
+main {
+  padding-bottom: var(--navbar-height);
+}
+
 body {
   margin: 0;
-  display: flex;
+  /* display: flex; */
   min-width: 320px;
   min-height: 100vh;
 }
@@ -57,6 +70,7 @@ button:focus-visible {
   :root {
     color: #213547;
     background-color: #ffffff;
+    --page-background: #ffffff;
   }
   a:hover {
     color: #747bff;

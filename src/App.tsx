@@ -31,7 +31,9 @@ const ProtectedRoute = ({credentials, redirectPath = "/"}: protectedRouteProps) 
   return (
     <>
       {/* After auth: global navbar + everything else */}
-      <Outlet/>
+      <main>
+        <Outlet/>
+      </main>
       <NavBar/>
     </>
   );
@@ -50,17 +52,15 @@ function App() {
   }, []);
 
   return (
-    <>
-      <Routes>
-        <Route index element={<Login/>} />
-        <Route element={<ProtectedRoute credentials={credentials}/>}>
-          <Route path='dashboard' element={<Dashboard/>} />
-          <Route path='entries' element={<Entries/>} />
-          <Route path='setting' element={<Setting/>} />
-        </Route>
-        <Route path="*" element={<NotFound/>} />
-      </Routes>
-    </>
+    <Routes>
+      <Route index element={<Login/>} />
+      <Route element={<ProtectedRoute credentials={credentials}/>}>
+        <Route path='dashboard' element={<Dashboard/>} />
+        <Route path='entries' element={<Entries/>} />
+        <Route path='setting' element={<Setting/>} />
+      </Route>
+      <Route path="*" element={<NotFound/>} />
+    </Routes>
   )
 }
 
