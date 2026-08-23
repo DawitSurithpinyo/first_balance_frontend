@@ -5,7 +5,7 @@ import { type GoogleUser } from '../types/userAuth';
 import { useAuthContext } from "@/stores/authContext";
 import { useNavigate } from 'react-router';
 
-export default function LoginWithGoogle() {
+export default function SignInWithGoogle() {
     const {login:login, csrfToken, setCSRFToken} = useAuthContext();
     const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ export default function LoginWithGoogle() {
     return (
         <button id="login-with-google-btn" onClick={googleLogin}>
             <img src={googleLogo} id="google-logo"></img>
-            <span id="google-login-text">Login with Google</span>
+            <span id="google-login-text">Sign in with Google</span>
         </button>
     )
 }
