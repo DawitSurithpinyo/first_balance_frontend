@@ -5,6 +5,9 @@
     justify-content: space-evenly;
     align-items: center;
 
+    min-width: 0;
+    flex: 1;
+
     #toolbar {
         display: flex;
         flex-direction: row;
@@ -16,6 +19,7 @@
             padding: 5px;
             align-items: center;
             border-radius: 5px;
+            min-width: 320px;
         }
         input, select {
             font-size: 80%;
@@ -52,59 +56,114 @@
     }
 
 
-    table {
-        /* borders stuff */
-        border-collapse: collapse;
-        th {
-            border: 2px solid black;
-        }
-        td {
-            border: 1px solid black;
-        }
-        th:first-child,
-        th:last-child,
-        td:first-child,
-        td:last-child {
-            border: 0;
-            background-color: var(--page-background);
-        }
-        th:first-child,
-        td:first-child {
-            padding-right: 10px;
-        }
-        th:last-child,
-        td:last-child {
-            padding-left: 10px;
-        }
+    #tableWrapper {
+        width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        align-self: stretch;
 
-        /* coloring */
-        th {
-            background-color: #616161;
-            color: white;
-        }
-        tr:nth-child(even) {
-            background-color: #c9a0ed;
-        }
-        tr:nth-child(odd) {
-            background-color: #ddc2f5;
-        }
 
+        table {
+            width: 100%;
+            min-width: 0;
+            align-self: self-start;
+
+            /* borders stuff */
+            border-collapse: collapse;
+            th {
+                border: 2px solid black;
+            }
+            td {
+                border: 1px solid black;
+            }
+            th:first-child,
+            th:last-child,
+            td:first-child,
+            td:last-child {
+                border: 0;
+                background-color: var(--page-background);
+            }
+            th:first-child,
+            td:first-child {
+                padding-right: 10px;
+            }
+            th:last-child,
+            td:last-child {
+                padding-left: 10px;
+            }
+
+            /* coloring */
+            th {
+                background-color: #616161;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #c9a0ed;
+            }
+            tr:nth-child(odd) {
+                background-color: #ddc2f5;
+            }
+
+            input {
+                border: 0;
+                background-color: transparent;
+                text-align: center;
+            }
+            #deleteOne {
+                background-color: #bc3252;
+                color: white;
+                height: 25px;
+                width: 60px;
+                font-size: 90%;
+                border-radius: 4px;
+            }            
+            #deleteOne:hover {
+                background-color: #e66f8b;
+                cursor: pointer;
+                transition-duration: 200ms;
+            }
+        }
+    }
+
+    #createFormWrapper {
+        width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        align-self: stretch;
+
+        #createForm {
+            width: 100%;
+            min-width: 0;
+            display: flex;
+            align-self: self-start;
+            padding-left: 32px;
+            padding-top: 20px;
+        }
+    }
+
+
+    @media (max-width: 1200px) {
+        #toolbar {
+            position: relative;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    label, #transactionName, 
+    #accountID, #value, 
+    #date, #memo {
+        color: #213547;
+    }
+
+    #toolbar {
         input {
-            border: 0;
-            background-color: transparent;
-            text-align: center;
-        }
-        #deleteOne {
-            background-color: #bc3252;
-            color: white;
-            height: 25px;
-            width: 60px;
-            font-size: 90%;
+            background-color: var(--page-background);
             border-radius: 4px;
-        }            
-        #deleteOne:hover {
-            background-color: #e66f8b;
-            cursor: pointer;
+            border: 0;
         }
     }
 }

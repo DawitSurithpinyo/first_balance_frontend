@@ -1,4 +1,4 @@
-import LoginWithGoogle from "./loginWithGoogle";
+import SignInWithGoogle from "./loginWithGoogle";
 import Banner from "./banner";
 import { useAuthContext } from "@/stores/authContext";
 import { Navigate } from "react-router-dom";
@@ -16,7 +16,7 @@ export default function Login() {
     return (
         <>
             <Banner/>
-            <LoginWithGoogle/>
+            <SignInWithGoogle/>
         </>
     )
 }

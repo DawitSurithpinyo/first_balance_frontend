@@ -45,3 +45,9 @@ section {
         justify-content: center;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    strong, span {
+        color: #213547;
+    }
+}

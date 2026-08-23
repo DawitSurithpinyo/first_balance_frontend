@@ -1,3 +1,5 @@
+import '@/features/setting/components/setting.css'
+
 import defaultProfile from '../assets/profile_placeholder.png'
 import logoutAPI from "@/features/setting/lib/logout"
 
@@ -33,20 +35,34 @@ export default function Setting() {
     }
 
     return (
-        <div style={{display: "flex", flexDirection: "column"}}>
-            <img 
-                src={displayProfilePic()} 
-                alt="Profile picture" 
-                referrerPolicy="no-referrer"
-                style={{borderRadius: "50%", width: "35%"}}
-            />
-            <span>Email: {credentials?.userEmail}</span>
-            <span>Username: {credentials?.userName}</span>
-            <input
-                type="button"
-                value="Logout"
-                onClick={async () => await handleLogout()}
-            />
+        <div id="main">
+            <div id="left">
+                <img 
+                    src={displayProfilePic()} 
+                    alt="Profile picture" 
+                    referrerPolicy="no-referrer"
+                />
+            </div>
+            <div id="right">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td id="head">Email</td>
+                            <td>{credentials?.userEmail}</td>
+                        </tr>
+                        <tr>
+                            <td id="head">User name</td>
+                            <td>{credentials?.userName}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input
+                    id="logout-btn"
+                    type="button"
+                    value="Logout"
+                    onClick={async () => await handleLogout()}
+                />
+            </div>
         </div>
     )
 }
