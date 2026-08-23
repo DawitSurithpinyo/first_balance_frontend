@@ -1,0 +1,49 @@
+#main {
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+
+    #left {
+        width: 50%;
+        
+        img {
+            border-radius: 50%;
+            width: 140px;
+        }
+    }
+
+    #right {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: left;
+
+        table {
+            width: 100%;
+            #head {
+                font-weight: bold;
+            }
+        }
+
+        #logout-btn {
+            margin-top: 5%;
+            width: 120px;
+        }
+    }
+
+    @media (max-width: 650px) {
+        flex-direction: column;
+        align-items: center;
+
+        #right{
+            margin-top: 20px;
+            width: 100%;
+            align-items: center;
+
+            table {
+                width: 400px;
+            }
+        }
+    }
+}
