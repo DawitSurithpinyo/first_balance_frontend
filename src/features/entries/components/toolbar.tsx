@@ -34,11 +34,11 @@ export default function Toolbar() {
     }
     function handleSubmitSortAsc(asc: string): void {
         const ascLow = asc.toLowerCase()
-        if (ascLow != 'true' && ascLow != 'false') {
-            console.error("Input for setting whether to sort transactions ascending should be 'true' or 'false' only.")
+        if (ascLow != 'ascending' && ascLow != 'descending') {
+            console.error("Input for setting whether to sort transactions ascending should be 'ascending' or 'descending' only.")
             return
         }
-        setSortAsc(ascLow === 'true')
+        setSortAsc(ascLow === 'ascending')
     }
 
 
@@ -169,10 +169,9 @@ export default function Toolbar() {
                     <option value="date">date</option>
                     <option value="memo">memo</option>
                 </select>
-                <label htmlFor="sortAsc">Sort ascending</label>
-                <select id="sortAsc" defaultValue="true" onChange={e => handleSubmitSortAsc(e.target.value)}>
-                    <option value="true">true</option>
-                    <option value="false">false</option>
+                <select id="sortAsc" defaultValue="ascending" onChange={e => handleSubmitSortAsc(e.target.value)}>
+                    <option value="ascending">ascending</option>
+                    <option value="descending">descending</option>
                 </select>
             </div>
 
