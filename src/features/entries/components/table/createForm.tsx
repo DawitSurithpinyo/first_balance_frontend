@@ -87,42 +87,44 @@ export default function CreateForm() {
         return undefined
     }
     return (
-        <div style={{display: "flex"}}>
-            <input 
-                type="text"
-                placeholder="Name"
-                onInput={e => handleCreateTransactionChange(e.currentTarget.value, "transactionName")}
-            />
-            <input 
-                type="text"
-                placeholder="Account ID"
-                onInput={e => handleCreateTransactionChange(e.currentTarget.value, "accountID")}
-            />
-            <input 
-                type="text"
-                placeholder="Value (any number)"
-                onInput={e => handleCreateTransactionChange(e.currentTarget.value, "value")}
-            />
-            <input 
-                type="text"
-                placeholder="Date (MM/dd/yyyy)"
-                onInput={e => handleCreateTransactionChange(e.currentTarget.value, "date")}
-            />
-            <input 
-                type="text"
-                placeholder="Memo"
-                onInput={e => handleCreateTransactionChange(e.currentTarget.value, "memo")}
-            />
-            <input
-                type="button"
-                value="Submit"
-                onClick={async () => await handleConfirmCreateTransaction()}
-            />
-            <input
-                type="button"
-                value="Cancel"
-                onClick={() => handleCancelOrFinishCreateTransaction()}
-            />
+        <div id="createFormWrapper">
+            <div id="createForm">
+                <input 
+                    type="text"
+                    placeholder="Name"
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "transactionName")}
+                />
+                <input 
+                    type="text"
+                    placeholder="Account ID"
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "accountID")}
+                />
+                <input 
+                    type="text"
+                    placeholder="Value (any number)"
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "value")}
+                />
+                <input 
+                    type="text"
+                    placeholder="Date (MM/dd/yyyy)"
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "date")}
+                />
+                <input 
+                    type="text"
+                    placeholder="Memo"
+                    onInput={e => handleCreateTransactionChange(e.currentTarget.value, "memo")}
+                />
+                <input
+                    type="button"
+                    value="Submit"
+                    onClick={async () => await handleConfirmCreateTransaction()}
+                />
+                <input
+                    type="button"
+                    value="Cancel"
+                    onClick={() => handleCancelOrFinishCreateTransaction()}
+                />
+            </div>
         </div>
     )
 }
