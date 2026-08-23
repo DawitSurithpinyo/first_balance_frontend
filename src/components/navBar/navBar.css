@@ -27,7 +27,8 @@ ul li a {
     display: block;
     justify-self: auto;
     color: white;
-    font-size: 200%;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    white-space: nowrap;
 }
 
 ul li a:hover {
