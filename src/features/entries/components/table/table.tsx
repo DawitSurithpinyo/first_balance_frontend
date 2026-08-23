@@ -179,6 +179,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input
+                                id="transactionName"
                                 defaultValue={t.transactionName}
                                 onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
@@ -192,6 +193,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input 
+                                id="accountID"
                                 defaultValue={t.accountID}
                                 onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
@@ -205,6 +207,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input 
+                                id="value"
                                 defaultValue={t.value.toString()}
                                 onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
@@ -218,6 +221,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input 
+                                id="date"
                                 defaultValue={t.date.toLocaleDateString()}
                                 onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
@@ -231,6 +235,7 @@ export default function Table() {
                         </td>
                         <td>
                             <input 
+                                id="memo"
                                 defaultValue={t.memo ?? ""}
                                 onFocus={e => handleCellFocus(e)}
                                 onInput={e => handleCellChange(e)}
@@ -261,21 +266,23 @@ export default function Table() {
     }
 
     return (
-        <table>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Account ID</th>
-                    <th>Value</th>
-                    <th>Date</th>
-                    <th>Memo (optional)</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {displayRows(transactions, sortKey, sortAscending)}               
-            </tbody>
-        </table>
+        <div id="tableWrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Account ID</th>
+                        <th>Value</th>
+                        <th>Date</th>
+                        <th>Memo (optional)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {displayRows(transactions, sortKey, sortAscending)}               
+                </tbody>
+            </table>
+        </div>
     )
 }
