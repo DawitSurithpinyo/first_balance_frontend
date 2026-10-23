@@ -10,7 +10,7 @@ COPY . .
 RUN pnpm build
 
 
-FROM nginx:1.31.2-alpine
+FROM nginx:stable-alpine3.24
 # Official Nginx image expects root user
 COPY nginx/prod.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/dist /usr/share/nginx/html
